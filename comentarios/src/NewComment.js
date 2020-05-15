@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 class NewComment extends Component {
 
@@ -13,7 +13,7 @@ class NewComment extends Component {
   }
 
   sendComment = () => {
-    this.props.sendComment(this.state.newComment);
+    this.props.sendComment(this.state.newComment)
     this.setState({
       newComment: ''
     })
@@ -27,8 +27,8 @@ class NewComment extends Component {
         <button onClick={this.sendComment}>Enviar</button>
       </div>
 
-    );
+    )
   }
 }
 
-export default NewComment;
+export default NewComment

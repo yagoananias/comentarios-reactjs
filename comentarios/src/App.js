@@ -1,29 +1,37 @@
-import React, { Component } from 'react';
-import Comments from './Comments';
-import NewComment from './NewComment';
-import './App.css';
-import { database } from './firebase';
+import React, { Component } from 'react'
+import Comments from './Comments'
+import NewComment from './NewComment'
+import './App.css'
+import { database } from './firebase'
 
 class App extends Component {
   state = {
-    comments:[
-      'Comment 1',
-      'Comment 2',
-      'Comment 3',
-      'Comment 4'
-    ]
+    comments:{},
+    isLoading: false
   }
 
   sendComment = comment => {
-    this.setState({
-      comments: [...this.state.comments, comment],
-    })
+    const id = database.ref().child('comments').push().key
+    const comments = {}
+      comments['comments/'+id] = {
+        comment
+      }
+
+      database.ref().update(comments)
+
+    /*this.setState({
+      comments: [...this.state.comments, comment + ' ' + id]
+    })*/
   }
 
   componentDidMount() {
-    this.comments = database.ref('comments');
+    this.setState({ isLoading: true })
+    this.comments = database.ref('comments')
     this.comments.on('value', snapshot => {
-      console.log(snapshot.val());
+      this.setState({
+        comments: snapshot.val(),
+        isLoading: false
+      })
     })
   }
 
@@ -32,18 +40,17 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
 
-          <div>
-            <NewComment sendComment={this.sendComment} />
-          </div>
-  
-          <div>
+            <NewComment sendComment={this.sendComment} />  
             <Comments comments={this.state.comments} />
-          </div>
+
+            {
+              this.state.isLoading && <p>Carregando...</p>
+            }
   
         </header>
       </div>
-    );
+    )
     }
 }
 
-export default App;
+export default App
