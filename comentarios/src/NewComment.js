@@ -14,6 +14,9 @@ class NewComment extends Component {
 
   sendComment = () => {
     this.props.sendComment(this.state.newComment);
+    this.setState({
+      newComment: ''
+    })
   }
 
   render() {

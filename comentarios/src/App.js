@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Comments from './Comments';
 import NewComment from './NewComment';
+import './App.css';
+import { database } from './firebase';
 
 class App extends Component {
   state = {
@@ -12,23 +14,36 @@ class App extends Component {
     ]
   }
 
-  sendComment = () => {
+  sendComment = comment => {
     this.setState({
-      comments: [...this.state.comments, this.state.newComment],
-      newComment: ''
+      comments: [...this.state.comments, comment],
     })
   }
 
-  render(){
+  componentDidMount() {
+    this.comments = database.ref('comments');
+    this.comments.on('value', snapshot => {
+      console.log(snapshot.val());
+    })
+  }
+
+  render() {
     return (
-      <div>
+      <div className="App">
+        <header className="App-header">
 
-        <NewComment sendComment={this.sendComment} />
-        <Comments comments={this.state.comments} />
-
+          <div>
+            <NewComment sendComment={this.sendComment} />
+          </div>
+  
+          <div>
+            <Comments comments={this.state.comments} />
+          </div>
+  
+        </header>
       </div>
     );
-  }
+    }
 }
 
 export default App;
