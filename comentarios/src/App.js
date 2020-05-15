@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Comments from './Comments'
 import NewComment from './NewComment'
 import './App.css'
-import { database } from './firebase'
 
 class App extends Component {
   state = {
@@ -11,6 +10,7 @@ class App extends Component {
   }
 
   sendComment = comment => {
+    const { database } = this.props
     const id = database.ref().child('comments').push().key
     const comments = {}
       comments['comments/'+id] = {
@@ -25,6 +25,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const { database } = this.props
     this.setState({ isLoading: true })
     this.comments = database.ref('comments')
     this.comments.on('value', snapshot => {
